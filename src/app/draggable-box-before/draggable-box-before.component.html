@@ -1,0 +1,6 @@
+<hr>
+<h2>Draggable Before</h2>
+<svg width="550" height="550" (mousedown)="mouseDown($event)" (mousemove)="mouseMove($event)" (mouseup)="mouseUp($event)">
+  <svg:g box *ngFor="let box of boxes" [box]="box" [selected]="box.id == currentId"></svg:g>
+</svg>
+<hr>
