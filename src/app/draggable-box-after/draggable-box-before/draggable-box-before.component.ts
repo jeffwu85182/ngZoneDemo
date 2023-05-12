@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Box } from '../box';
+import { Box } from 'src/app/box';
 
 @Component({
   selector: 'app-draggable-box-before',

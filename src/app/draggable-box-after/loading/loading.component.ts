@@ -1,13 +1,13 @@
-import { Component, NgZone } from '@angular/core';
+import {Component, NgZone} from '@angular/core';
 
 @Component({
   selector: 'app-loading',
   templateUrl: './loading.component.html',
-  styleUrls: ['./loading.component.scss'],
+  styleUrls: ['./loading.component.scss']
 })
 export class LoadingComponent {
   progress = 0;
-  label: string = '';
+  label: string;
   constructor(private _ngZone: NgZone) {}
 
   // Loop inside the Angular zone
@@ -26,9 +26,8 @@ export class LoadingComponent {
     this._ngZone.runOutsideAngular(() => {
       this._increaseProgress(() => {
         // reenter the Angular zone and display done
-        this._ngZone.run(() => {
-          console.log('Outside Done!');
-        });
+        this._ngZone.run(() => {console.log('Outside Done!')});
+
       });
     });
   }

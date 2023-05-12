@@ -1,37 +1,38 @@
-import {Component, NgZone, OnInit} from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
+import { Box } from '../box';
 
 @Component({
   selector: 'app-draggable-box-after',
-  templateUrl: './draggable-box-after.component.html'
+  templateUrl: './draggable-box-after.component.html',
 })
 export class DraggableBoxAfterComponent implements OnInit {
-  currentId = null;
-  boxes = [];
-  offsetX;
-  offsetY;
-  element;
+  currentId: number | null = null;
+  boxes: Box[] = [];
+  offsetX: number = 0;
+  offsetY: number = 0;
+  element: HTMLElement | null = null;
   constructor(private _ngZone: NgZone) {}
 
   ngOnInit() {
-    const getRandomInt = (min, max) => {
+    const getRandomInt = (min: number, max: number) => {
       return Math.floor(Math.random() * (max - min)) + min;
     };
     for (let i = 0; i < 10000; i++) {
       const id = i;
       const x = getRandomInt(0, 500);
       const y = getRandomInt(0, 500);
-      const box = {id, x, y};
+      const box: Box = { id, x, y };
       this.boxes.push(box);
     }
   }
 
-  bindMouse =
-      (ev) => {
-        this.mouseMove(ev);
-      }
+  bindMouse = (ev: MouseEvent) => {
+    this.mouseMove(ev);
+  };
 
-  mouseDown(event) {
-    const id = Number(event.target.getAttribute('dataId'));
+  mouseDown(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const id = Number(target.getAttribute('dataId'));
     const box = this.boxes[id];
     const mouseX = event.clientX;
     const mouseY = event.clientY;
@@ -39,33 +40,37 @@ export class DraggableBoxAfterComponent implements OnInit {
     this.offsetY = box.y - mouseY;
     this.currentId = id;
 
-    this.element = event.target;
+    this.element = event.target as HTMLElement;
     this._ngZone.runOutsideAngular(() => {
       window.document.addEventListener('mousemove', this.bindMouse);
     });
   }
 
-  mouseMove(event) {
+  mouseMove(event: MouseEvent) {
     event.preventDefault();
-    this.element.setAttribute('x', event.clientX + this.offsetX + 'px');
-    this.element.setAttribute('y', event.clientY + this.offsetY + 'px');
+    this.element?.setAttribute('x', event.clientX + this.offsetX + 'px');
+    this.element?.setAttribute('y', event.clientY + this.offsetY + 'px');
     // Another options is to change styles using transformations
     // this.element.style = `transform: translate3d(${event.clientX -
     // this.off.mouseX}px,
     // ${event.clientY - this.off.mouseY}px, 0)`;
   }
 
-  mouseUp($event) {
+  mouseUp($event: MouseEvent) {
     this._ngZone.run(() => {
-      this.updateBox(
-          this.currentId, $event.clientX + this.offsetX,
-          $event.clientY + this.offsetY);
+      if (this.currentId) {
+        this.updateBox(
+          this.currentId,
+          $event.clientX + this.offsetX,
+          $event.clientY + this.offsetY
+        );
+      }
       this.currentId = null;
-    })
+    });
     window.document.removeEventListener('mousemove', this.bindMouse);
   }
 
-  updateBox(id, x, y) {
+  updateBox(id: number, x: number, y: number) {
     const box = this.boxes[id];
     box.x = x;
     box.y = y;
