@@ -28,6 +28,7 @@ export class DraggableBoxBeforeComponent implements OnInit {
   mouseDown(event: MouseEvent) {
     const target = event.target as HTMLElement;
     const id = Number(target.getAttribute('dataId'));
+    if (!id) return;
     const box = this.boxes[id];
     const mouseX = event.clientX;
     const mouseY = event.clientY;
